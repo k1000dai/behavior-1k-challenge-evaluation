@@ -32,4 +32,4 @@ services:
       - NVIDIA_VISIBLE_DEVICES=all
       - NVIDIA_DRIVER_CAPABILITIES=all
       - DISPLAY
-    entrypoint: ["/bin/bash"]
+    entrypoint: ["/bin/bash","-lc","tail -f /dev/null"]
