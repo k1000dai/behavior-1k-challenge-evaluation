@@ -4,10 +4,34 @@ RUN apt-get update && apt-get install -y \
     python3 \
     python3-pip \
     python3-venv \
-    git \
+    git vim \
     && rm -rf /var/lib/apt/lists/*
 
 RUN apt-get update && apt-get install -y --no-install-recommends curl ca-certificates
+RUN apt-get update && apt-get install -y \
+    libgl1 \
+    libglib2.0-0 \
+    libsm6 \
+    libxext6 \
+    libxrender1 \
+    libglvnd0 \
+    libegl1 \
+    ffmpeg \
+    && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y \
+    libxt6 \
+    libglu1-mesa \
+    libxmu6 \
+    libxi6 \
+    libxrender1 \
+    libxext6 \
+    libx11-6 \
+    libxrandr2 \
+    libxcursor1 \
+    libxinerama1 \
+    libglib2.0-0 \
+    libfontconfig1 \
+    && rm -rf /var/lib/apt/lists/*
 ADD https://astral.sh/uv/install.sh /uv-installer.sh
 RUN sh /uv-installer.sh && rm /uv-installer.sh
 ENV PATH="/root/.local/bin/:$PATH"
@@ -17,13 +41,13 @@ ARG BEHAVIOR_BRANCH=v3.7.0
 ARG CUDA_VERSION=12.4
 ARG INSTALL_BDDL=true
 ARG INSTALL_OMNIGIBSON=true
-ARG INSTALL_JOYLO=false
+ARG INSTALL_JOYLO=true
 ARG INSTALL_PRIMITIVES=false
 ARG INSTALL_EVAL=false
 ARG INSTALL_DEV=false
-ARG INSTALL_DATASET=false
+ARG INSTALL_DATASET=true
 ARG ACCEPT_NVIDIA_EULA=true
-ARG ACCEPT_DATASET_TOS=false
+ARG ACCEPT_DATASET_TOS=true
 
 # Clone BEHAVIOR-1K repo
 WORKDIR /opt
@@ -39,7 +63,8 @@ RUN set -e; \
     uv pip install "numpy<2" "setuptools<=79"; \
     CUDA_VER_SHORT=$(echo ${CUDA_VERSION} | sed 's/\\.//g'); \
     uv pip install pip; \
-    uv pip install torch torchvision torchaudio --torch-backend=auto
+    uv pip install torch torchvision torchaudio --torch-backend=auto \
+    uv pip install hydra-core gspread pandas av msgpack
 
 # Make venv active for subsequent layers
 ENV VIRTUAL_ENV=/opt/behavior-1k/.venv
