@@ -80,8 +80,7 @@ RUN set -e; \
       else \
         echo "Installing Isaac Sim wheels..."; \
         tmpdir=$(mktemp -d); cd "$tmpdir"; \
-        packages=( \
-          omniverse_kit-106.5.0.162521 isaacsim_kernel-4.5.0.0 isaacsim_app-4.5.0.0 \
+        packages="omniverse_kit-106.5.0.162521 isaacsim_kernel-4.5.0.0 isaacsim_app-4.5.0.0 \
           isaacsim_core-4.5.0.0 isaacsim_gui-4.5.0.0 isaacsim_utils-4.5.0.0 \
           isaacsim_storage-4.5.0.0 isaacsim_asset-4.5.0.0 isaacsim_sensor-4.5.0.0 \
           isaacsim_robot_motion-4.5.0.0 isaacsim_robot-4.5.0.0 isaacsim_benchmark-4.5.0.0 \
@@ -89,11 +88,11 @@ RUN set -e; \
           isaacsim_example-4.5.0.0 isaacsim_replicator-4.5.0.0 isaacsim_rl-4.5.0.0 \
           isaacsim_robot_setup-4.5.0.0 isaacsim_ros2-4.5.0.0 isaacsim_template-4.5.0.0 \
           isaacsim_test-4.5.0.0 isaacsim-4.5.0.0 isaacsim_extscache_physics-4.5.0.0 \
-          isaacsim_extscache_kit-4.5.0.0 isaacsim_extscache_kit_sdk-4.5.0.0 \
-        ); \
-        for pkg in "${packages[@]}"; do \
+          isaacsim_extscache_kit-4.5.0.0 isaacsim_extscache_kit_sdk-4.5.0.0"; \
+        for pkg in $packages; do \
           pkg_name=${pkg%-*}; filename="${pkg}-cp310-none-manylinux_2_34_x86_64.whl"; \
-          url="https://pypi.nvidia.com/${pkg_name//_/-}/$filename"; \
+          pkg_name_dash=$(echo "$pkg_name" | tr '_' '-'); \
+          url="https://pypi.nvidia.com/${pkg_name_dash}/$filename"; \
           echo "Downloading $pkg"; curl -sSL "$url" -o "$filename"; \
         done; \
         uv pip install ./*.whl; \
