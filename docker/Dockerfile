@@ -37,7 +37,7 @@ RUN set -e; \
     uv venv --python "$PYBIN" .venv; \
     . .venv/bin/activate; \
     uv pip install "numpy<2" "setuptools<=79"; \
-    CUDA_VER_SHORT=$(echo ${CUDA_VERSION} | sed 's/\.| //g'); \
+    CUDA_VER_SHORT=$(echo ${CUDA_VERSION} | sed 's/\\.//g'); \
     uv pip install torch==2.6.0 torchvision==0.21.0 torchaudio==2.6.0 --index-url https://download.pytorch.org/whl/cu${CUDA_VER_SHORT}
 
 # Make venv active for subsequent layers
@@ -70,15 +70,13 @@ RUN if [ "$INSTALL_OMNIGIBSON" = "true" ]; then \
     fi
 
 # NVIDIA EULA and Isaac Sim wheels
-RUN if [ "$INSTALL_OMNIGIBSON" = "true" ]; then \
-      if [ "$ACCEPT_NVIDIA_EULA" != "true" ]; then \
-        echo "You must set --build-arg ACCEPT_NVIDIA_EULA=true"; exit 1; \
-      fi; \
+RUN set -e; \
+    if [ "$INSTALL_OMNIGIBSON" = "true" ]; then \
+      if [ "$ACCEPT_NVIDIA_EULA" != "true" ]; then echo "You must set --build-arg ACCEPT_NVIDIA_EULA=true"; exit 1; fi; \
       export OMNI_KIT_ACCEPT_EULA=YES; \
-      python - <<'PY' 2>/dev/null || true
-import isaacsim
-PY
-      ; if [ "$?" -ne 0 ]; then \
+      if python -c "import isaacsim" >/dev/null 2>&1; then \
+        echo "Isaac Sim already installed, skipping..."; \
+      else \
         echo "Installing Isaac Sim wheels..."; \
         tmpdir=$(mktemp -d); cd "$tmpdir"; \
         packages=( \
@@ -93,43 +91,28 @@ PY
           isaacsim_extscache_kit-4.5.0.0 isaacsim_extscache_kit_sdk-4.5.0.0 \
         ); \
         for pkg in "${packages[@]}"; do \
-          pkg_name=${pkg%-*}; \
-          filename="${pkg}-cp310-none-manylinux_2_34_x86_64.whl"; \
+          pkg_name=${pkg%-*}; filename="${pkg}-cp310-none-manylinux_2_34_x86_64.whl"; \
           url="https://pypi.nvidia.com/${pkg_name//_/-}/$filename"; \
-          echo "Downloading $pkg"; \
-          curl -sSL "$url" -o "$filename"; \
+          echo "Downloading $pkg"; curl -sSL "$url" -o "$filename"; \
         done; \
         uv pip install ./*.whl; \
         cd /opt/behavior-1k; rm -rf "$tmpdir"; \
-        python - <<'PY'
-import isaacsim
-print('isaacsim import ok')
-PY
-        ; \
-      else \
-        echo "Isaac Sim already installed, skipping..."; \
+        python -c "import isaacsim; print('isaacsim import ok')"; \
       fi; \
     fi
 
 # Dataset (optional)
-RUN if [ "$INSTALL_OMNIGIBSON" = "true" ] && [ "$INSTALL_DATASET" = "true" ]; then \
+RUN set -e; \
+    if [ "$INSTALL_OMNIGIBSON" = "true" ] && [ "$INSTALL_DATASET" = "true" ]; then \
       export OMNI_KIT_ACCEPT_EULA=YES; \
-      python - <<'PY'
-from omnigibson.utils.asset_utils import download_omnigibson_robot_assets
-download_omnigibson_robot_assets()
-PY
-      ; \
+      python -c "from omnigibson.utils.asset_utils import download_omnigibson_robot_assets; download_omnigibson_robot_assets()"; \
       if [ "$ACCEPT_DATASET_TOS" = "true" ]; then PYFLAG=True; else PYFLAG=False; fi; \
       python - <<PY
 from omnigibson.utils.asset_utils import download_behavior_1k_assets
 download_behavior_1k_assets(accept_license=${PYFLAG})
 PY
       ; \
-      python - <<'PY'
-from omnigibson.utils.asset_utils import download_2025_challenge_task_instances
-download_2025_challenge_task_instances()
-PY
-      ; \
+      python -c "from omnigibson.utils.asset_utils import download_2025_challenge_task_instances; download_2025_challenge_task_instances()"; \
     fi
 
 # JoyLo (optional)
