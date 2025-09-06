@@ -20,9 +20,10 @@ services:
               count: all
               capabilities: [gpu]
   omnigibson:
-  build:
-    context: docker
-    dockerfile: Dockerfile
+    build:
+      context: docker
+      dockerfile: Dockerfile
+    runtime: nvidia
     depends_on:
       - desktop
     volumes: 
