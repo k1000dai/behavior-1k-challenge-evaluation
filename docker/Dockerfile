@@ -38,6 +38,7 @@ RUN set -e; \
     . .venv/bin/activate; \
     uv pip install "numpy<2" "setuptools<=79"; \
     CUDA_VER_SHORT=$(echo ${CUDA_VERSION} | sed 's/\\.//g'); \
+    uv pip install pip; \
     python -m pip install --upgrade pip; \
     python -m pip install torch==2.6.0 torchvision==0.21.0 torchaudio==2.6.0 --index-url https://download.pytorch.org/whl/cu${CUDA_VER_SHORT}
 
