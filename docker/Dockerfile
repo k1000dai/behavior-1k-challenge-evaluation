@@ -107,11 +107,7 @@ RUN set -e; \
       export OMNI_KIT_ACCEPT_EULA=YES; \
       python -c "from omnigibson.utils.asset_utils import download_omnigibson_robot_assets; download_omnigibson_robot_assets()"; \
       if [ "$ACCEPT_DATASET_TOS" = "true" ]; then PYFLAG=True; else PYFLAG=False; fi; \
-      python - <<PY
-from omnigibson.utils.asset_utils import download_behavior_1k_assets
-download_behavior_1k_assets(accept_license=${PYFLAG})
-PY
-      ; \
+      python -c "from omnigibson.utils.asset_utils import download_behavior_1k_assets; download_behavior_1k_assets(accept_license=${PYFLAG})"; \
       python -c "from omnigibson.utils.asset_utils import download_2025_challenge_task_instances; download_2025_challenge_task_instances()"; \
     fi
 
