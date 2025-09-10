@@ -95,12 +95,6 @@ RUN if [ "$INSTALL_OMNIGIBSON" = "true" ]; then \
       fi; \
     fi
 
-# Install BDDL in editable mode (for dev)
-RUN if [ "$INSTALL_BDDL" = "true" ]; then \
-      [ -d bddl ] || { echo "bddl directory missing"; exit 1; }; \
-      uv pip install -e bddl; \
-    fi
-
 # NVIDIA EULA and Isaac Sim wheels
 RUN set -e; \
     if [ "$INSTALL_OMNIGIBSON" = "true" ]; then \
@@ -142,6 +136,12 @@ RUN set -e; \
       python -c "from omnigibson.utils.asset_utils import download_2025_challenge_task_instances; download_2025_challenge_task_instances()"; \
     fi
 
+# Install BDDL in editable mode (for dev)
+RUN if [ "$INSTALL_BDDL" = "true" ]; then \
+      [ -d bddl ] || { echo "bddl directory missing"; exit 1; }; \
+      uv pip install -e bddl; \
+    fi
+    
 # JoyLo (optional)
 RUN if [ "$INSTALL_JOYLO" = "true" ]; then \
       [ -d joylo ] || { echo "joylo directory missing"; exit 1; }; \
