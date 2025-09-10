@@ -70,10 +70,10 @@ RUN set -e; \
 ENV VIRTUAL_ENV=/opt/behavior-1k/.venv
 ENV PATH="/opt/behavior-1k/.venv/bin:$PATH"
 
-# Install BDDL (editable)
+# Install BDDL 
 RUN if [ "$INSTALL_BDDL" = "true" ]; then \
       [ -d bddl ] || { echo "bddl directory missing"; exit 1; }; \
-      uv pip install -e bddl; \
+      uv pip install bddl; \
     fi
 
 # Install OmniGibson (editable) with optional extras
@@ -93,6 +93,12 @@ RUN if [ "$INSTALL_OMNIGIBSON" = "true" ]; then \
       if [ "$INSTALL_DEV" = "true" ]; then \
         uv pip install pre-commit && (cd OmniGibson && pre-commit install); \
       fi; \
+    fi
+
+# Install BDDL in editable mode (for dev)
+RUN if [ "$INSTALL_BDDL" = "true" ]; then \
+      [ -d bddl ] || { echo "bddl directory missing"; exit 1; }; \
+      uv pip install -e bddl; \
     fi
 
 # NVIDIA EULA and Isaac Sim wheels
