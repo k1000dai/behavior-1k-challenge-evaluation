@@ -32,4 +32,6 @@ services:
       - NVIDIA_VISIBLE_DEVICES=all
       - NVIDIA_DRIVER_CAPABILITIES=all
       - DISPLAY
+    ports:
+     - "8000:8000"
     entrypoint: ["/bin/bash","-lc","tail -f /dev/null"]

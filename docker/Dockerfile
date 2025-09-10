@@ -63,7 +63,7 @@ RUN set -e; \
     uv pip install "numpy<2" "setuptools<=79"; \
     CUDA_VER_SHORT=$(echo ${CUDA_VERSION} | sed 's/\\.//g'); \
     uv pip install pip; \
-    uv pip install torch torchvision torchaudio --torch-backend=auto \
+    uv pip install torch torchvision torchaudio --torch-backend=auto; \
     uv pip install hydra-core gspread pandas av msgpack
 
 # Make venv active for subsequent layers
