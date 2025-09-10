@@ -43,7 +43,7 @@ ARG INSTALL_BDDL=true
 ARG INSTALL_OMNIGIBSON=true
 ARG INSTALL_JOYLO=true
 ARG INSTALL_PRIMITIVES=false
-ARG INSTALL_EVAL=false
+ARG INSTALL_EVAL=true
 ARG INSTALL_DEV=false
 ARG INSTALL_DATASET=true
 ARG ACCEPT_NVIDIA_EULA=true
@@ -141,7 +141,7 @@ RUN if [ "$INSTALL_BDDL" = "true" ]; then \
       [ -d bddl ] || { echo "bddl directory missing"; exit 1; }; \
       uv pip install -e bddl; \
     fi
-    
+
 # JoyLo (optional)
 RUN if [ "$INSTALL_JOYLO" = "true" ]; then \
       [ -d joylo ] || { echo "joylo directory missing"; exit 1; }; \
