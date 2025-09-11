@@ -145,4 +145,8 @@ RUN if [ "$INSTALL_JOYLO" = "true" ]; then \
       uv pip install -e joylo; \
     fi
 
+# Fix cffi version to avoid potential issues with newer versions
+RUN set -e; \
+    uv pip install "cffi==1.17.1"
+
 WORKDIR /workspace
