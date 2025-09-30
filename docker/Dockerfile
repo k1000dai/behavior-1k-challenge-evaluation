@@ -37,7 +37,7 @@ RUN sh /uv-installer.sh && rm /uv-installer.sh
 ENV PATH="/root/.local/bin/:$PATH"
 
 # Build-time options
-ARG BEHAVIOR_BRANCH=v3.7.0
+ARG BEHAVIOR_BRANCH=main
 ARG CUDA_VERSION=12.4
 ARG INSTALL_BDDL=true
 ARG INSTALL_OMNIGIBSON=true
