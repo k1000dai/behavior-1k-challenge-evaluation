@@ -1,6 +1,6 @@
 services:
   desktop:
-    container_name: kohei.sendai.virtual_desktop
+    container_name: behavior1k.virtual_desktop
     image: ghcr.io/matsuolab/virtual_desktop:latest
     runtime: nvidia
     environment:
@@ -21,7 +21,7 @@ services:
               count: all
               capabilities: [gpu]
   omnigibson:
-    container_name: kohei.sendai.omnigibson
+    container_name: behavior1k.omnigibson
     build:
       context: docker
       dockerfile: Dockerfile
