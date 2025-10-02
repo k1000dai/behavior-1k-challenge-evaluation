@@ -25,6 +25,7 @@ services:
     build:
       context: docker
       dockerfile: Dockerfile
+    shm_size: '32g'
     runtime: nvidia
     depends_on:
       - desktop
