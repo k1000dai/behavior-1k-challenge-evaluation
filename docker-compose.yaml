@@ -1,6 +1,7 @@
 services:
   desktop:
     container_name: behavior1k.virtual_desktop
+    shm_size: '8g'
     image: ghcr.io/matsuolab/virtual_desktop:latest
     runtime: nvidia
     environment:
